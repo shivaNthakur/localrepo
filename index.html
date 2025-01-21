@@ -2,10 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #ff7e5f;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background: #feb47b;
+        }
+    </style>
 </head>
 <body>
-    this is new file
+    <div class="container">
+        <h1>Love Calculator</h1>
+        <p>Find out the chance your crush loves you back!</p>
+        <input type="text" id="name1" placeholder="Enter your name">
+        <input type="text" id="name2" placeholder="Enter your crush's name">
+        <button onclick="calculateLove()">Calculate</button>
+        <p id="result"></p>
+    </div>
+    
+    <script>
+        function calculateLove() {
+            const name1 = document.getElementById('name1').value.toUpperCase();
+            const name2 = document.getElementById('name2').value.toUpperCase();
+            const additionalWord = "LOVES";
+            const allNames = name1 + name2 + additionalWord;
+
+            const letterCount = {};
+            for (let letter of allNames) {
+                letterCount[letter] = (letterCount[letter] || 0) + 1;
+            }
+
+            const orders = [name1, additionalWord, name2];
+            let outputIntegers = [];
+
+            orders.forEach(order => {
+                for (let letter of order) {
+                    if (letterCount[letter] !== undefined) {
+                        outputIntegers.push(letterCount[letter]);
+                        delete letterCount[letter];
+                    }
+                }
+            });
+
+            for (let letter in letterCount) {
+                outputIntegers.push(letterCount[letter]);
+            }
+
+            const combinedNumber = parseInt(outputIntegers.join(''));
+            const result = symmetricSum(combinedNumber);
+
+            document.getElementById('result').textContent = `There is a ${result}% chance that you love ${name2} `;
+        }
+
+        function symmetricSum(number) {
+            let numberStr = String(number);
+
+            while (numberStr.length > 2) {
+                let newNumberStr = "";
+                const length = numberStr.length;
+
+                for (let i = 0; i < Math.floor(length / 2); i++) {
+                    newNumberStr += String(Number(numberStr[i]) + Number(numberStr[length - 1 - i]));
+                }
+
+                if (length % 2 === 1) {
+                    newNumberStr += numberStr[Math.floor(length / 2)];
+                }
+
+                numberStr = newNumberStr;
+            }
+
+            return Number(numberStr);
+        }
+    </script>
 </body>
 </html>
